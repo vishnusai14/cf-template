@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  MyFirstInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      SecurityGroups:
+        - !Ref InstanceSecurityGroup
+      ImageId: "ami-0ad21ae1d0696ad58"
+      InstanceType: "t2.micro"
+      Tags:
+        - Key: "Name"
+          Value: !Join [ ":", [ MyFirstInstance, !Ref AWS::Region ] ]
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow SSH and HTTP Rule"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 152.58.224.111/32
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+
+
+

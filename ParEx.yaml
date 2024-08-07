@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Mappings:
+  RegionAMIMap:
+    ap-south-1:
+      AMI: "ami-0a4408457f9a03be3"
+    ap-south-2:
+      AMI: "ami-0ad21ae1d0696ad58"
+
+Parameters:
+  MyKeyPair:
+    Description: Amazon EC2 Key Pair
+    Type: "AWS::EC2::KeyPair::KeyName"
+  InstanceType:
+    Description: Choose the Instance Type
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t2.small
+      - m1.large
+      - m1.small
+      - t2.medium
+
+Resources:
+  MyFirstInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap [ RegionAMIMap, !Ref AWS::Region, AMI ]
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref MyKeyPair
+      SecurityGroups: !Ref InstanceSecurityGroup
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow SSH and HTTP Rule"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 152.58.224.111/32
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
